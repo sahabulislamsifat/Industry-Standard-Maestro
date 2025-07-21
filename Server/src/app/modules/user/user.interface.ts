@@ -13,9 +13,9 @@ export enum UserRole {
 // google, facebook, apple, etc authentications.
 
 export interface IauthProvider {
-  provider: string; // e.g., 'google', 'facebook', 'email'
-  providerId: string; // Unique identifier for the provider
-  email?: string; // Optional email for email-based authentication
+  provider: "google" | "credentials";
+  providerId: string;
+  email?: string;
 }
 
 export enum IsActive {
@@ -25,20 +25,19 @@ export enum IsActive {
 }
 
 export interface IUser {
-  name: string; // Full name of the user
-  email: string; // Email address of the user
-  password?: string; // Optional password for email-based authentication
-  phone?: string; // Optional phone number of the user
-  picture?: string; // Optional profile picture URL
-  address?: string; // Optional address of the user
-  isDeleted?: boolean; // Flag to indicate if the user is deleted
-  isActive?: boolean; // Flag to indicate if the user is active
-  isVerified?: boolean; // Flag to indicate if the user is verified
-  role?: UserRole; // Role of the user (e.g., SUPER_ADMIN, ADMIN, USER, GUIDE)
-  authProvider?: IauthProvider[];
-  // Array of authentication providers associated with the user
-  Bookings?: Types.ObjectId[]; // Array of booking IDs associated with the user
-  guides?: Types.ObjectId[]; // Array of guide IDs associated with the user
-  createdAt?: Date; // Timestamp when the user was created
-  updatedAt?: Date; // Timestamp when the user was last updated
+  name: string;
+  email: string;
+  password?: string;
+  phone?: string;
+  picture?: string;
+  address?: string;
+  isDeleted?: boolean;
+  isActive?: boolean;
+  isVerified?: boolean;
+  role?: UserRole;
+  auths?: IauthProvider[];
+  Bookings?: Types.ObjectId[];
+  guides?: Types.ObjectId[];
+  createdAt?: Date;
+  updatedAt?: Date;
 }

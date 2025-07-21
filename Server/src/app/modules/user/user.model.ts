@@ -27,7 +27,7 @@ const userSchema = new Schema(
       default: IsActive.ACTIVE,
     },
     isVerified: { type: Boolean, default: false },
-    authProvider: [authProviderSchema],
+    auths: [authProviderSchema],
   },
 
   {
