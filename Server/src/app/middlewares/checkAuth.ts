@@ -9,6 +9,7 @@ export const checkAuth =
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const accessToken = await req.headers.authorization;
+
       if (!accessToken) {
         throw new AppError(403, "No token received");
       }
@@ -23,6 +24,7 @@ export const checkAuth =
       req.user = verifiedToken;
       next();
     } catch (error) {
+      console.log("Error From JWT:", error);
       next(error);
     }
   };

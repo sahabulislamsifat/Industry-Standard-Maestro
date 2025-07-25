@@ -6,9 +6,9 @@ import httpStatus from "http-status-codes";
 import { UserService } from "./user.services";
 import { catchAsync } from "../../utils/createAsync";
 import { sendResponse } from "../../utils/sendResponse";
-import { verifyToken } from "../../utils/jwt";
-import { envVariables } from "../../config/env";
-import { JwtPayload } from "jsonwebtoken";
+// import { verifyToken } from "../../utils/jwt";
+// import { envVariables } from "../../config/env";
+// import { JwtPayload } from "jsonwebtoken";
 
 // const createUserFunction = async (req: Request, res: Response) => {
 //   const newUser = await UserService.createUser(req.body);
