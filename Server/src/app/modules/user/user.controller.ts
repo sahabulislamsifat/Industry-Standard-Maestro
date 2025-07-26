@@ -3,9 +3,10 @@
 // import AppError from "../../errorHelper/AppError";
 import { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status-codes";
-import { UserService } from "./user.services";
+import { UserService } from "./user.service";
 import { catchAsync } from "../../utils/createAsync";
 import { sendResponse } from "../../utils/sendResponse";
+import { JwtPayload } from "jsonwebtoken";
 // import { verifyToken } from "../../utils/jwt";
 // import { envVariables } from "../../config/env";
 // import { JwtPayload } from "jsonwebtoken";
@@ -72,8 +73,11 @@ const updateUser = catchAsync(
     //   token as string,
     //   envVariables.JWT_ACCESS_SECRET
     // ) as JwtPayload;
+    if (!req.user) {
+      throw new Error("Unauthorized access: no user found in request");
+    }
 
-    const verifiedToken = req.user;
+    const verifiedToken = req.user as JwtPayload;
 
     const payload = req.body;
     const user = await UserService.updateUser(userId, payload, verifiedToken);
