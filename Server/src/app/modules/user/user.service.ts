@@ -9,10 +9,11 @@ import { JwtPayload } from "jsonwebtoken";
 const createUser = async (payload: Partial<IUser>) => {
   const { email, password, ...rest } = payload;
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const isUserExist = await UserModel.findOne({ email });
-  if (isUserExist) {
-    throw new AppError(httpStatus.BAD_REQUEST, "User already exist!!");
-  }
+  // if (isUserExist) {
+  //   throw new AppError(httpStatus.BAD_REQUEST, "User already exist!!");
+  // }
 
   const hashedPassword = await bcryptjs.hash(
     password as string,
