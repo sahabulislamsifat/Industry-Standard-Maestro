@@ -1,0 +1,60 @@
+import express from "express";
+import { checkAuth } from "../../middlewares/checkAuth";
+import { validateRequest } from "../../middlewares/validateRequest";
+import { UserRole } from "../user/user.interface";
+import { TourController } from "./tour.controller";
+import {
+  createTourTypeZodSchema,
+  createTourZodSchema,
+  updateTourZodSchema,
+} from "./tour.validation";
+
+const router = express.Router();
+
+//* Tour Types Routes
+router.post(
+  "/create-tour-type",
+  checkAuth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  validateRequest(createTourTypeZodSchema),
+  TourController.createTourType
+);
+
+router.get("/tour-types", TourController.getAllTourTypes);
+
+router.patch(
+  "/tour-types/:id",
+  checkAuth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  validateRequest(createTourTypeZodSchema),
+  TourController.updateTourType
+);
+
+router.delete(
+  "/tour-types/:id",
+  checkAuth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  TourController.deleteTourType
+);
+
+//** TOUR ROUTES
+router.post(
+  "/create",
+  checkAuth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  validateRequest(createTourZodSchema),
+  TourController.createTour
+);
+
+router.get("/", TourController.getAllTours);
+
+router.patch(
+  "/:id",
+  checkAuth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  validateRequest(updateTourZodSchema),
+  TourController.updateTour
+);
+
+router.delete(
+  "/:id",
+  checkAuth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  TourController.deleteTour
+);
+
+export const TourRoutes = router;
