@@ -9,7 +9,7 @@ export interface ITour {
   description?: string;
   images?: string;
   location?: string;
-  costForm?: string;
+  costFrom?: string;
   startDate?: Date;
   departureLocation?: string;
   arrivalLocation?: string;
