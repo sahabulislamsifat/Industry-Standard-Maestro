@@ -3,10 +3,10 @@
 // import AppError from "../../errorHelper/AppError";
 import { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status-codes";
-import { UserService } from "./user.service";
 import { catchAsync } from "../../utils/createAsync";
 import { sendResponse } from "../../utils/sendResponse";
 import { JwtPayload } from "jsonwebtoken";
+import { UserService } from "./user.service";
 // import { verifyToken } from "../../utils/jwt";
 // import { envVariables } from "../../config/env";
 // import { JwtPayload } from "jsonwebtoken";
@@ -64,6 +64,48 @@ const createUser = catchAsync(
   }
 );
 
+const getAllUsers = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const result = await UserService.getAllUsers();
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.CREATED,
+      message: "All Users Retrieved Successfully",
+      data: result.data,
+      meta: result.meta,
+    });
+  }
+);
+
+const getSingleUser = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    const result = await UserService.getSingleUser(id);
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "User retrieved Successfully",
+      data: result.data,
+    });
+  }
+);
+
+const getMe = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const decodedToken = req.user as JwtPayload;
+    const result = await UserService.getMe(decodedToken.userId);
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.CREATED,
+      message: "Your profile Retrieved Successfully",
+      data: result.data,
+    });
+  }
+);
+
 const updateUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const userId = req.params.id;
@@ -91,23 +133,11 @@ const updateUser = catchAsync(
   }
 );
 
-const getAllUsers = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const result = await UserService.getAllUsers();
-
-    sendResponse(res, {
-      success: true,
-      statusCode: httpStatus.CREATED,
-      message: "User updated Successfully",
-      data: result.data,
-      meta: result.meta,
-    });
-  }
-);
-
 export const UserController = {
   createUser,
   getAllUsers,
+  getSingleUser,
+  getMe,
   updateUser,
 };
 
