@@ -7,6 +7,7 @@ export const validateRequest =
   (zodSchema: AnyZodObject) =>
   async (req: Request, res: Response, next: NextFunction) => {
     try {
+      req.body = req.body.data ? JSON.parse(req.body.data) : req.body;
       const parsedData = await zodSchema.parseAsync(req.body);
       // TypeScript error fix: bypass readonly typing (optional workaround)
       req.body = parsedData;

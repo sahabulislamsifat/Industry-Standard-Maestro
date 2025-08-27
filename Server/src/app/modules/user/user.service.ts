@@ -9,11 +9,10 @@ import { JwtPayload } from "jsonwebtoken";
 const createUser = async (payload: Partial<IUser>) => {
   const { email, password, ...rest } = payload;
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const isUserExist = await UserModel.findOne({ email });
-  // if (isUserExist) {
-  //   throw new AppError(httpStatus.BAD_REQUEST, "User already exist!!");
-  // }
+  if (isUserExist) {
+    throw new AppError(httpStatus.BAD_REQUEST, "User already exist!!");
+  }
 
   const hashedPassword = await bcryptjs.hash(
     password as string,
@@ -32,6 +31,34 @@ const createUser = async (payload: Partial<IUser>) => {
     ...rest,
   });
   return user;
+};
+
+const getAllUsers = async () => {
+  const users = await UserModel.find({});
+
+  const totalUsers = await UserModel.countDocuments();
+  return {
+    data: users,
+    meta: {
+      total: totalUsers,
+    },
+  };
+};
+
+const getSingleUser = async (id: string) => {
+  const user = await UserModel.findById(id).select("-password");
+
+  return {
+    data: user,
+  };
+};
+
+const getMe = async (id: string) => {
+  const result = await UserModel.findById(id).select("-password");
+
+  return {
+    data: result,
+  };
 };
 
 const updateUser = async (
@@ -86,20 +113,10 @@ const updateUser = async (
   return newUpdateUser;
 };
 
-const getAllUsers = async () => {
-  const users = await UserModel.find({});
-
-  const totalUsers = await UserModel.countDocuments();
-  return {
-    data: users,
-    meta: {
-      total: totalUsers,
-    },
-  };
-};
-
 export const UserService = {
   createUser,
   getAllUsers,
+  getSingleUser,
+  getMe,
   updateUser,
 };
