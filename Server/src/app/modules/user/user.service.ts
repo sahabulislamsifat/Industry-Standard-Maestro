@@ -66,26 +66,35 @@ const updateUser = async (
   payload: Partial<IUser>,
   decodedToken: JwtPayload
 ) => {
-  const ifUserExist = await UserModel.findById(userId);
-  if (!ifUserExist) {
-    throw new AppError(httpStatus.NOT_FOUND, "User Not Found");
-  }
   // Email can't update
   // name, phone, password and address
   // password re-hashing
   // only admin superAdmin - role isDeleted
   // promoting to superAdmin - superAdmin
 
+  if (
+    decodedToken.role === UserRole.USER ||
+    decodedToken.role === UserRole.GUIDE
+  ) {
+    throw new AppError(httpStatus.FORBIDDEN, "You are not authorized ");
+  }
+
+  const ifUserExist = await UserModel.findById(userId);
+  if (!ifUserExist) {
+    throw new AppError(httpStatus.NOT_FOUND, "User Not Found");
+  }
+
+  if (
+    decodedToken.role === UserRole.ADMIN &&
+    ifUserExist.role === UserRole.SUPER_ADMIN
+  ) {
+    throw new AppError(httpStatus.FORBIDDEN, "You are not authorized ");
+  }
+
   if (payload.role) {
     if (
       decodedToken.role === UserRole.USER ||
       decodedToken.role === UserRole.GUIDE
-    ) {
-      throw new AppError(httpStatus.FORBIDDEN, "You are not authorized ");
-    }
-    if (
-      payload.role === UserRole.SUPER_ADMIN &&
-      decodedToken.role === UserRole.ADMIN
     ) {
       throw new AppError(httpStatus.FORBIDDEN, "You are not authorized ");
     }
@@ -100,12 +109,6 @@ const updateUser = async (
     }
   }
 
-  if (payload.password) {
-    payload.password = await bcryptjs.hash(
-      payload.password,
-      envVariables.BCRYPT_SALT_ROUND
-    );
-  }
   const newUpdateUser = await UserModel.findByIdAndUpdate(userId, payload, {
     new: true,
     runValidators: true,

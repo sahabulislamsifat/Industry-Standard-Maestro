@@ -8,7 +8,7 @@ import AppError from "../errorHelper/AppError";
 const transporter = nodemailer.createTransport({
   port: Number(envVariables.EMAIL_SENDER.SMTP_PORT),
   host: envVariables.EMAIL_SENDER.SMTP_HOST,
-  secure: true,
+  secure: Number(envVariables.EMAIL_SENDER.SMTP_PORT) === 465,
   auth: {
     user: envVariables.EMAIL_SENDER.SMTP_USER,
     pass: envVariables.EMAIL_SENDER.SMTP_PASS,
@@ -35,7 +35,11 @@ export const sendEmail = async ({
   attachments,
 }: SendEmailOptions) => {
   try {
-    const templatePath = path.join(__dirname, `templates/${templateName}.ejs`);
+    const templatePath = path.resolve(
+      __dirname,
+      "templates",
+      `${templateName}.ejs`
+    );
     const html = await ejs.renderFile(templatePath, templateData);
     const info = await transporter.sendMail({
       from: envVariables.EMAIL_SENDER.SMTP_FROM,
