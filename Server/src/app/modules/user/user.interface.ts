@@ -39,6 +39,6 @@ export interface IUser {
   auths?: IauthProvider[];
   Bookings?: Types.ObjectId[];
   guides?: Types.ObjectId[];
-  createdAt?: Date;
   updatedAt?: Date;
+  createdAt?: Date;
 }

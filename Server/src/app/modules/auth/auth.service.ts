@@ -172,6 +172,7 @@ const forgotPassword = async (email: string) => {
       resetUILink,
     },
   });
+  // http://localhost:5173/reset-password?id=68af3799d1e3d168fb4a2aaf&token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGFmMzc5OWQxZTNkMTY4ZmI0YTJhYWYiLCJlbWFpbCI6IjBpc2xhbS5zaWZhdEBnbWFpbC5jb20iLCJyb2xlIjoiVVNFUiIsImlhdCI6MTc1NjMxNTUyNSwiZXhwIjoxNzU2MzE2MTI1fQ.0C3M0x2973YGUjOzpDJBK1BwN67qekMf4spz9J6VcgU
 };
 
 const resetPassword = async (

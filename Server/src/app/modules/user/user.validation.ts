@@ -45,20 +45,6 @@ export const updateUserZodSchema = z.object({
 
   email: z.string().email({ message: "Invalid email address" }).optional(),
 
-  password: z
-    .string()
-    .min(8, { message: "Password must be at least 8 characters long" })
-    .regex(/[A-Z]/, {
-      message: "Password must contain at least one uppercase letter",
-    })
-    .regex(/[0-9]/, {
-      message: "Password must contain at least one number",
-    })
-    .regex(/[!@#$%^&*(),.?":{}|<>]/, {
-      message: "Password must contain at least one special character",
-    })
-    .optional(),
-
   role: z.enum(Object.values(UserRole) as [string]).optional(),
 
   isActive: z.enum(Object.values(IsActive) as [string]).optional(),
