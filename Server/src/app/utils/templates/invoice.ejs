@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Invoice - <%= transactionId %></title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 30px;
+        color: #333;
+      }
+      .header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+      .header h1 {
+        margin: 0;
+        font-size: 28px;
+        color: #444;
+      }
+      .details {
+        margin-bottom: 20px;
+      }
+      .details p {
+        margin: 4px 0;
+        font-size: 14px;
+      }
+      .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 30px;
+      }
+      .table th,
+      .table td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        font-size: 14px;
+      }
+      .table th {
+        background: #f4f4f4;
+        text-align: left;
+      }
+      .total {
+        text-align: right;
+        font-size: 16px;
+        font-weight: bold;
+        margin-top: 20px;
+      }
+      .footer {
+        text-align: center;
+        margin-top: 40px;
+        font-size: 12px;
+        color: #666;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>Invoice</h1>
+      <p>Transaction ID: <%= transactionId %></p>
+    </div>
+
+    <div class="details">
+      <p><strong>Booking Date:</strong> <%= bookingDate.toDateString() %></p>
+      <p><strong>Customer Name:</strong> <%= userName %></p>
+      <p><strong>Tour Title:</strong> <%= tourTitle %></p>
+      <p><strong>Guests:</strong> <%= guestCount %></p>
+    </div>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Guests</th>
+          <th>Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><%= tourTitle %></td>
+          <td><%= guestCount %></td>
+          <td>$<%= totalAmount.toFixed(2) %></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="total">Total: $<%= totalAmount.toFixed(2) %></div>
+
+    <div class="footer">
+      <p>Thank you for booking with us!</p>
+    </div>
+  </body>
+</html>
