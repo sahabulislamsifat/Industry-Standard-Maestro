@@ -1,0 +1,18 @@
+const HeroSection = () => {
+  return (
+    <div>
+      <h1>this is hero</h1>
+      <div className="py-16 px-4 container mx-auto">
+        <h1> This is Hero component </h1>
+        <p>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero, qui
+          eos. Architecto quisquam odit soluta fugit quos ab unde, voluptatem
+          eos necessitatibus nesciunt, in neque consequatur adipisci velit
+          accusantium illum.
+        </p>
+      </div>
+    </div>
+  );
+};
+
+export default HeroSection;
