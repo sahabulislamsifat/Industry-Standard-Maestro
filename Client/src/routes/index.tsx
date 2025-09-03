@@ -1,5 +1,8 @@
 import App from "@/App";
-import Home from "@/pages/Home";
+import About from "@/pages/About";
+import Login from "@/pages/auth/Login";
+import Register from "@/pages/auth/Register";
+import Verify from "@/pages/auth/Verify";
 import { createBrowserRouter } from "react-router";
 
 export const router = createBrowserRouter([
@@ -8,9 +11,21 @@ export const router = createBrowserRouter([
     path: "/",
     children: [
       {
-        Component: Home,
-        path: "home",
+        Component: About,
+        path: "about",
       },
     ],
+  },
+  {
+    Component: Register,
+    path: "register",
+  },
+  {
+    Component: Login,
+    path: "login",
+  },
+  {
+    Component: Verify,
+    path: "verify",
   },
 ]);

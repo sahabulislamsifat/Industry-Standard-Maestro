@@ -11,13 +11,13 @@ import {
 } from "@/components/ui/popover";
 import { Button } from "../ui/button";
 import Logo from "@/assets/icons/Logo";
+import { ModeToggle } from "./ModeToggle";
+import { Link } from "react-router";
 
 // Navigation links array to be used in both desktop and mobile menus
 const navigationLinks = [
-  { href: "#", label: "Home", active: true },
-  { href: "#", label: "Features" },
-  { href: "#", label: "Pricing" },
-  { href: "#", label: "About" },
+  { href: "/", label: "Home" },
+  { href: "/about", label: "About" },
 ];
 
 const Navbar = () => {
@@ -67,12 +67,8 @@ const Navbar = () => {
                   <NavigationMenuList className="flex-col items-start gap-0 md:gap-2">
                     {navigationLinks.map((link, index) => (
                       <NavigationMenuItem key={index} className="w-full">
-                        <NavigationMenuLink
-                          href={link.href}
-                          className="py-1.5"
-                          active={link.active}
-                        >
-                          {link.label}
+                        <NavigationMenuLink href={link.href} className="py-1.5">
+                          <Link to={link.href}>{link.label}</Link>
                         </NavigationMenuLink>
                       </NavigationMenuItem>
                     ))}
@@ -82,7 +78,7 @@ const Navbar = () => {
             </Popover>
             {/* Main nav */}
             <div className="flex items-center gap-6">
-              <a href="#" className="text-primary hover:text-primary/90">
+              <a href="/" className="text-primary hover:text-primary/90">
                 <Logo />
               </a>
               {/* Navigation menu */}
@@ -91,11 +87,10 @@ const Navbar = () => {
                   {navigationLinks.map((link, index) => (
                     <NavigationMenuItem key={index}>
                       <NavigationMenuLink
-                        active={link.active}
-                        href={link.href}
-                        className="text-muted-foreground hover:text-primary py-1.5 font-medium"
+                        asChild
+                        className="text-muted-foreground hover:text-primary py-1.5 font-medium rounded-none"
                       >
-                        {link.label}
+                        <Link to={link.href}>{link.label}</Link>
                       </NavigationMenuLink>
                     </NavigationMenuItem>
                   ))}
@@ -105,11 +100,13 @@ const Navbar = () => {
           </div>
           {/* Right side */}
           <div className="flex items-center gap-2">
-            <Button asChild variant="ghost" size="sm" className="text-sm">
-              <a href="#">Sign In</a>
-            </Button>
-            <Button asChild size="sm" className="text-sm">
-              <a href="#">Get Started</a>
+            <ModeToggle></ModeToggle>
+            <Button
+              asChild
+              size="sm"
+              className="text-sm rounded-none hover:bg-orange-600"
+            >
+              <a href="/login">Get Started</a>
             </Button>
           </div>
         </div>
