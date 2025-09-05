@@ -3,7 +3,7 @@ import { authControllers } from "./auth.controller";
 import { checkAuth } from "../../middlewares/checkAuth";
 import { UserRole } from "../user/user.interface";
 import passport from "passport";
-// import { envVariables } from "../../config/env";
+import { envVariables } from "../../config/env";
 
 const router = Router();
 
@@ -42,12 +42,12 @@ router.get(
 );
 
 // api/v1/auth/google/callback?state=/booking
-// router.get(
-//   "/google/callback",
-//   passport.authenticate("google", {
-//     failureRedirect: `${envVariables.FRONTEND_URL}/login?error=There is some issues with your account. Please contact with out support team!`,
-//   }),
-//   authControllers.googleCallbackController
-// );
+router.get(
+  "/google/callback",
+  passport.authenticate("google", {
+    failureRedirect: `${envVariables.FRONTEND_URL}/login?error=There is some issues with your account. Please contact with out support team!`,
+  }),
+  authControllers.googleCallbackController
+);
 
 export const authRoutes = router;
