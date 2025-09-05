@@ -86,6 +86,8 @@ passport.use(
 
         let isUserExist = await UserModel.findOne({ email });
         if (isUserExist && !isUserExist.isVerified) {
+          // throw new AppError(httpStatus.BAD_REQUEST, "User is not verified")
+          // done("User is not verified")
           return done(null, false, { message: "User is not verified" });
         }
 
@@ -94,10 +96,12 @@ passport.use(
           (isUserExist.isActive === IsActive.BLOCKED ||
             isUserExist.isActive === IsActive.INACTIVE)
         ) {
+          // throw new AppError(httpStatus.BAD_REQUEST, `User is ${isUserExist.isActive}`)
           done(`User is ${isUserExist.isActive}`);
         }
 
         if (isUserExist && isUserExist.isDeleted) {
+          // done("User is deleted")
           return done(null, false, { message: "User is deleted" });
         }
 
@@ -125,6 +129,12 @@ passport.use(
   )
 );
 
+//* FrontEnd localhost:5173 -> localhost:5000/api/v1/auth/google -> passport -> google Oauth consent -> gmail login -> successfully -> callback url localhost:5000/api/v1/auth/google/callback -> db store -> token
+
+//* Bridge ==> google -> user db store -> token
+//* Custom ==> email, password, role : USER , name... -> registration -> DB -> user create
+//* Google ==> req -> google -> successfully : JWT token : role , email , -> DB -> store -> api access
+
 passport.serializeUser((user: any, done: (err: any, id?: unknown) => void) => {
   done(null, user._id);
 });
@@ -138,9 +148,3 @@ passport.deserializeUser(async (id: string, done: any) => {
     done(error);
   }
 });
-
-//* FrontEnd localhost:5173 -> localhost:5000/api/v1/auth/google -> passport -> google Oauth consent -> gmail login -> successfully -> callback url localhost:5000/api/v1/auth/google/callback -> db store -> token
-
-//* Bridge ==> google -> user db store -> token
-//* Custom ==> email, password, role : USER , name... -> registration -> DB -> user create
-//* Google ==> req -> google -> successfully : JWT token : role , email , -> DB -> store -> api access

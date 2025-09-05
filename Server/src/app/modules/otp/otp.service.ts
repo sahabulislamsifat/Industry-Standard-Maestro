@@ -3,14 +3,13 @@ import { UserModel } from "../user/user.model";
 import AppError from "../../errorHelper/AppError";
 import { redisClient } from "../../config/redis.config";
 import { sendEmail } from "../../utils/sendEmail";
+
 const OTP_EXPIRATION = 2 * 60; // 2minute
 
 const generateOtp = (length = 6) => {
   //6 digit otp
   const otp = crypto.randomInt(10 ** (length - 1), 10 ** length).toString();
-
   // 10 ** 5 => 10 * 10 *10 *10 *10 * 10 => 1000000
-
   return otp;
 };
 

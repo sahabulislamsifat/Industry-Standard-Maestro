@@ -1,3 +1,4 @@
+import config from "@/components/config";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -20,16 +21,30 @@ const LoginForm = ({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => {
   const navigate = useNavigate();
-  const form = useForm();
+  const form = useForm({
+    //! For development only
+    defaultValues: {
+      email: "sifat.testemail@gmail.com",
+      password: "Sifat@2025",
+    },
+  });
   const [login] = useLoginMutation();
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     try {
       const res = await login(data).unwrap();
-      console.log(res);
+
+      if (res.success) {
+        toast.success("Logged in successfully");
+        navigate("/");
+      }
     } catch (err: any) {
       console.error(err);
 
-      if (err.status === 401) {
+      if (err.data.message === "Password does not match") {
+        toast.error("Invalid credentials");
+      }
+
+      if (err.data.message === "User is not verified") {
         toast.error("Your account is not verified");
         navigate("/verify", { state: data.email });
       }
@@ -96,6 +111,7 @@ const LoginForm = ({
         </div>
 
         <Button
+          onClick={() => window.open(`${config.baseUrl}/auth/google`)}
           type="button"
           variant="outline"
           className="w-full cursor-pointer rounded-none"
