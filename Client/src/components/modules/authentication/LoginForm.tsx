@@ -11,7 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import Password from "@/components/ui/password";
 import { cn } from "@/lib/utils";
-import { useLoginMutation } from "@/redux/auth/auth.api";
+import { useLoginMutation } from "@/redux/features/auth/auth.api";
 import { useForm, type FieldValues, type SubmitHandler } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
 import { toast } from "sonner";

@@ -16,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import Password from "@/components/ui/password";
 import { Button } from "@/components/ui/button";
-import { useRegisterMutation } from "@/redux/auth/auth.api";
+import { useRegisterMutation } from "@/redux/features/auth/auth.api";
 
 const registerSchema = z
   .object({
