@@ -25,7 +25,7 @@ import { cn } from "@/lib/utils";
 import {
   useSendOtpMutation,
   useVerifyOtpMutation,
-} from "@/redux/auth/auth.api";
+} from "@/redux/features/auth/auth.api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Dot } from "lucide-react";
 import { useEffect, useState } from "react";
