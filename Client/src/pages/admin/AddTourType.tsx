@@ -1,3 +1,4 @@
+import DeleteConfirmation from "@/components/DeleteConfirmation";
 import AddTourTypeModel from "@/components/modules/admin/tourType/AddTourTypeModel";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,11 +9,29 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useGetTourTypesQuery } from "@/redux/features/tour/tour.api";
+import {
+  useGetTourTypesQuery,
+  useRemoveTourTypeMutation,
+} from "@/redux/features/tour/tour.api";
 import { Trash2 } from "lucide-react";
+import { toast } from "sonner";
 
 const AddTourType = () => {
   const { data } = useGetTourTypesQuery(undefined);
+  const [removeTourType] = useRemoveTourTypeMutation();
+
+  const handleRemoveTourType = async (tourId: string) => {
+    const toastId = toast.loading("Removing...");
+    try {
+      const res = await removeTourType(tourId).unwrap();
+
+      if (res.success) {
+        toast.success("Removed", { id: toastId });
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <div className="w-full max-w-7xl mx-auto px-5">
@@ -29,13 +48,17 @@ const AddTourType = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data?.map((item: { name: string }) => (
+            {data?.map((item: { _id: string; name: string }) => (
               <TableRow>
-                <TableCell className=" w-full">{item?.name}</TableCell>
+                <TableCell className="w-full">{item?.name}</TableCell>
                 <TableCell>
-                  <Button size="sm" className="rounded-[2px] cursor-pointer">
-                    <Trash2 />
-                  </Button>
+                  <DeleteConfirmation
+                    onConfirm={() => handleRemoveTourType(item._id)}
+                  >
+                    <Button size="sm" className="rounded-[2px] cursor-pointer">
+                      <Trash2 />
+                    </Button>
+                  </DeleteConfirmation>
                 </TableCell>
               </TableRow>
             ))}
