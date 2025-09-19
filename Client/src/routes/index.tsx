@@ -12,6 +12,10 @@ import { generateRoutes } from "@/utils/generateRoute";
 import { adminSidebarItems } from "./adminSidebarItem";
 import { userSidebarItems } from "./userSidebarItem";
 import NotFound from "@/pages/NotFound";
+import Tours from "@/pages/user/Tours";
+import TourDetails from "@/pages/user/TourDetails";
+import Home from "@/pages/Home";
+import Booking from "@/pages/user/Booking";
 
 export const router = createBrowserRouter([
   {
@@ -19,8 +23,24 @@ export const router = createBrowserRouter([
     path: "/",
     children: [
       {
-        Component: withAuth(About),
+        Component: Home,
+        index: true,
+      },
+      {
+        Component: About,
         path: "about",
+      },
+      {
+        Component: Tours,
+        path: "tours",
+      },
+      {
+        Component: TourDetails,
+        path: "tours/:id",
+      },
+      {
+        Component: withAuth(Booking),
+        path: "booking/:id",
       },
     ],
   },

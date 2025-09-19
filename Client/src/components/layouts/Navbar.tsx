@@ -21,6 +21,7 @@ import { role } from "@/constants/role";
 const navigationLinks = [
   { href: "/", label: "Home", role: "PUBLIC" },
   { href: "/about", label: "About", role: "PUBLIC" },
+  { href: "/tours", label: "Tours", role: "PUBLIC" },
   { href: "/admin", label: "Dashboard", role: role.admin },
   { href: "/admin", label: "Dashboard", role: role.superAdmin },
   { href: "/user", label: "Dashboard", role: role.user },
@@ -30,7 +31,6 @@ const Navbar = () => {
   const { data } = useUserInfoQuery(undefined);
   const [logout] = useLogoutMutation();
   const dispatch = useAppDispatch();
-  console.log(data?.data?.email);
 
   const handleLogout = async () => {
     await logout(undefined);
@@ -39,8 +39,8 @@ const Navbar = () => {
 
   return (
     <div>
-      <header className="border-b">
-        <div className="container mx-auto px-4 flex h-16 items-center justify-between gap-4">
+      <header>
+        <div className="max-w-11/12 mx-auto px-4 flex h-16 items-center justify-between gap-4">
           {/* Left side */}
           <div className="flex items-center gap-2">
             {/* Mobile menu trigger */}
@@ -78,42 +78,63 @@ const Navbar = () => {
                   </svg>
                 </Button>
               </PopoverTrigger>
-              <PopoverContent align="start" className="w-36 p-1 md:hidden">
+              <PopoverContent
+                align="start"
+                className="w-36 rounded-none mt-4 p-1 md:hidden"
+              >
                 <NavigationMenu className="max-w-none *:w-full">
                   <NavigationMenuList className="flex-col items-start gap-0 md:gap-2">
                     {navigationLinks.map((link, index) => (
-                      <NavigationMenuItem key={index} className="w-full">
-                        <NavigationMenuLink href={link.href} className="py-1.5">
-                          <Link to={link.href}>{link.label}</Link>
-                        </NavigationMenuLink>
-                      </NavigationMenuItem>
+                      <div key={index} className="w-full">
+                        {link.role === "PUBLIC" && (
+                          <NavigationMenuItem>
+                            <NavigationMenuLink
+                              asChild
+                              className="rounded-none text-muted-foreground hover:text-primary py-1.5 font-medium w-full block"
+                            >
+                              <Link to={link.href}>{link.label}</Link>
+                            </NavigationMenuLink>
+                          </NavigationMenuItem>
+                        )}
+                        {link.role === data?.data?.role && (
+                          <NavigationMenuItem>
+                            <NavigationMenuLink
+                              asChild
+                              className="text-muted-foreground hover:text-primary py-1.5 font-medium rounded-none w-full block"
+                            >
+                              <Link to={link.href}>{link.label}</Link>
+                            </NavigationMenuLink>
+                          </NavigationMenuItem>
+                        )}
+                      </div>
                     ))}
                   </NavigationMenuList>
                 </NavigationMenu>
               </PopoverContent>
             </Popover>
+
             {/* Main nav */}
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-4 sm:gap-6">
               <a href="/" className="text-primary hover:text-primary/90">
                 <Logo />
               </a>
               {/* Navigation menu */}
-              <NavigationMenu className="max-md:hidden">
-                <NavigationMenuList className="gap-2">
+              <NavigationMenu className="hidden md:flex">
+                <NavigationMenuList className="gap-2 lg:gap-4">
                   {navigationLinks.map((link, index) => (
-                    <>
+                    <div key={index}>
                       {link.role === "PUBLIC" && (
-                        <NavigationMenuItem key={index}>
+                        <NavigationMenuItem>
                           <NavigationMenuLink
                             asChild
-                            className="text-muted-foreground hover:text-primary py-1.5 font-medium"
+                            className="rounded-none text-muted-foreground hover:text-primary py-1.5 font-medium"
                           >
                             <Link to={link.href}>{link.label}</Link>
                           </NavigationMenuLink>
                         </NavigationMenuItem>
                       )}
                       {link.role === data?.data?.role && (
-                        <NavigationMenuItem key={index}>
+                        <NavigationMenuItem>
                           <NavigationMenuLink
                             asChild
                             className="text-muted-foreground hover:text-primary py-1.5 font-medium rounded-none"
@@ -122,15 +143,16 @@ const Navbar = () => {
                           </NavigationMenuLink>
                         </NavigationMenuItem>
                       )}
-                    </>
+                    </div>
                   ))}
                 </NavigationMenuList>
               </NavigationMenu>
             </div>
           </div>
+
           {/* Right side */}
-          <div className="flex items-center gap-2">
-            <ModeToggle></ModeToggle>
+          <div className="flex items-center gap-2 sm:gap-3">
+            <ModeToggle />
             {data?.data?.email && (
               <Button
                 onClick={handleLogout}
