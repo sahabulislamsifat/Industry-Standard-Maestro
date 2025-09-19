@@ -127,7 +127,7 @@ const updateUser = catchAsync(
     sendResponse(res, {
       success: true,
       statusCode: httpStatus.CREATED,
-      message: "User created Successfully",
+      message: "User updated Successfully",
       data: user,
     });
   }
