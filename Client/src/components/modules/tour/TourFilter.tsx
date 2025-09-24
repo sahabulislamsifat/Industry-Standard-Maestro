@@ -32,12 +32,15 @@ const TourFilter = () => {
     })
   );
 
-  const tourTypeOptions = tourTypeData?.data?.map(
+  const tourTypeOptions = tourTypeData?.map(
     (item: { _id: string; name: string }) => ({
       label: item.name,
       value: item._id,
     })
   );
+  // console.log("Selected Tour Types::", selectedTourType);
+  // console.log("Tour type data:", tourTypeData);
+  // console.log("Tour type options", tourTypeOptions);
 
   const handleDivisionChange = (value: string) => {
     const params = new URLSearchParams(searchParams);
@@ -79,7 +82,7 @@ const TourFilter = () => {
           disabled={divisionIsLoading}
         >
           <SelectTrigger className="w-full rounded-none">
-            <SelectValue />
+            <SelectValue placeholder="Select a Division" />
           </SelectTrigger>
           <SelectContent className="rounded-none shadow-sm">
             <SelectGroup>
@@ -97,15 +100,15 @@ const TourFilter = () => {
         <Label className="mb-2">Tour Type</Label>
         <Select
           onValueChange={handleTourTypeChange}
-          value={selectedTourType ? selectedTourType : ""}
+          value={selectedTourType || ""}
           disabled={tourTypeIsLoading}
         >
           <SelectTrigger className="w-full rounded-none">
-            <SelectValue />
+            <SelectValue placeholder="Select a Tour Type" />
           </SelectTrigger>
           <SelectContent className="rounded-none shadow-sm">
             <SelectGroup>
-              <SelectLabel>Divisions</SelectLabel>
+              <SelectLabel>Tour Types</SelectLabel>
               {tourTypeOptions?.map(
                 (item: { value: string; label: string }) => (
                   <SelectItem key={item.value} value={item.value}>

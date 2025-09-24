@@ -25,6 +25,8 @@ const getPaymentStats = catchAsync(async (req: Request, res: Response) => {
 
 const getUserStats = catchAsync(async (req: Request, res: Response) => {
   const stats = await StatsService.getUserStats();
+  // console.log(stats);
+
   sendResponse(res, {
     statusCode: 200,
     success: true,

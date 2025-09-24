@@ -120,7 +120,7 @@ const Navbar = () => {
               </a>
               {/* Navigation menu */}
               <NavigationMenu className="hidden md:flex">
-                <NavigationMenuList className="gap-2 lg:gap-4">
+                <NavigationMenuList>
                   {navigationLinks.map((link, index) => (
                     <div key={index}>
                       {link.role === "PUBLIC" && (

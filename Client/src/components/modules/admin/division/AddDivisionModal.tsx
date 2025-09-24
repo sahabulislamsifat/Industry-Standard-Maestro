@@ -61,7 +61,7 @@ const AddDivisionModal = () => {
       <DialogTrigger asChild>
         <Button className="rounded-[2px] cursor-pointer">Add Division</Button>
       </DialogTrigger>
-      <DialogContent className="rounded-sm sm:max-w-[425px]">
+      <DialogContent className="rounded-none sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Add Division</DialogTitle>
         </DialogHeader>

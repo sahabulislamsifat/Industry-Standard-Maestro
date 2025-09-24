@@ -16,6 +16,8 @@ import Tours from "@/pages/user/Tours";
 import TourDetails from "@/pages/user/TourDetails";
 import Home from "@/pages/Home";
 import Booking from "@/pages/user/Booking";
+import PaymentSuccess from "@/pages/payment/PaymentSuccess";
+import PaymentFail from "@/pages/payment/PaymentFail";
 
 export const router = createBrowserRouter([
   {
@@ -71,6 +73,14 @@ export const router = createBrowserRouter([
   {
     Component: Verify,
     path: "/verify",
+  },
+  {
+    Component: PaymentSuccess,
+    path: "/payment/success",
+  },
+  {
+    Component: PaymentFail,
+    path: "/payment/fail",
   },
   {
     Component: NotFound,
