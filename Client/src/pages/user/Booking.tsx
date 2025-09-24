@@ -8,176 +8,197 @@ const Booking = () => {
   const [guestCount, setGuestCount] = useState(1);
   const [totalAmount, setTotalAmount] = useState(0);
 
-  // console.log(totalAmount);
-
   const { id } = useParams();
   const { data, isLoading, isError } = useGetAllToursQuery({ _id: id });
   const [createBooking] = useCreateBookingMutation();
 
-  const tourData = data?.[0];
+  const tourData = data?.[0]; // 👈 safe optional chaining
 
   useEffect(() => {
-    if (!isLoading && !isError) {
-      setTotalAmount(guestCount * tourData!.costFrom);
+    if (!isLoading && !isError && tourData) {
+      setTotalAmount(guestCount * (tourData.costFrom ?? 0));
     }
-  }, [guestCount, totalAmount, isLoading, isError]);
+  }, [guestCount, isLoading, isError, tourData]);
 
   const incrementGuest = () => {
     setGuestCount((prv) => prv + 1);
   };
 
   const decrementGuest = () => {
-    setGuestCount((prv) => prv - 1);
+    setGuestCount((prv) => Math.max(1, prv - 1));
   };
 
   const handleBooking = async () => {
-    let bookingData;
+    if (!tourData) return; // 👈 safe guard
 
-    if (data) {
-      bookingData = {
-        tour: id,
-        guestCount: guestCount,
-      };
-    }
+    const bookingData = {
+      tour: id,
+      guestCount: guestCount,
+    };
 
     try {
       const res = await createBooking(bookingData).unwrap();
       if (res.success) {
         window.open(res.data.paymentUrl);
       }
+      console.log(res);
     } catch (err) {
       console.log(err);
     }
   };
 
+  // 🔹 Loading State
   if (isLoading) {
-    return <p>Loading...</p>;
+    return (
+      <div className="flex items-center justify-center h-[60vh]">
+        <p className="text-gray-500 text-lg animate-pulse">
+          Loading tour details...
+        </p>
+      </div>
+    );
   }
 
+  // 🔹 Error State
+  if (isError) {
+    return (
+      <div className="flex items-center justify-center h-[60vh]">
+        <div className="bg-red-50 border border-red-200 rounded-xl p-6 max-w-md text-center shadow">
+          <h2 className="text-lg font-semibold text-red-600">
+            Something Went Wrong ❌
+          </h2>
+          <p className="text-gray-600 mt-2">
+            We couldn’t load the tour details. Please try again later.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // 🔹 No Data Found
+  if (!tourData) {
+    return (
+      <div className="flex items-center justify-center h-[60vh]">
+        <div className="p-6 max-w-md text-center">
+          <h2 className="text-lg font-semibold text-yellow-500 dark:text-yellow-400">
+            No Tour Data Found ⚠️
+          </h2>
+          <p className="text-gray-500 dark:text-gray-400 mt-2">
+            Sorry! We couldn’t find any tour for this booking.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // 🔹 Main UI (unchanged logic & design)
   return (
     <div className="flex flex-col md:flex-row gap-8 p-6 container mx-auto">
-      {!isLoading && isError && (
+      {/* Left Section - Tour Summary */}
+      <div className="flex-1 space-y-6">
         <div>
-          <p>Something Went Wrong!!</p>{" "}
+          <img
+            src={tourData.images?.[0]}
+            alt={tourData.title}
+            className="w-full h-64 object-cover"
+          />
         </div>
-      )}
 
-      {!isLoading && data?.length === 0 && (
         <div>
-          <p>No Data Found</p>{" "}
-        </div>
-      )}
+          <h1 className="text-3xl font-bold mb-2">{tourData.title}</h1>
+          <p className="text-gray-400 mb-4">{tourData.description}</p>
 
-      {!isLoading && !isError && data!.length > 0 && (
-        <>
-          {/* Left Section - Tour Summary */}
-          <div className="flex-1 space-y-6">
+          <div className="grid grid-cols-2 gap-4 text-sm">
             <div>
-              <img
-                src={tourData?.images[0]}
-                alt={tourData?.title}
-                className="w-full h-64 object-cover"
-              />
+              <strong>Location:</strong> {tourData.location}
             </div>
-
             <div>
-              <h1 className="text-3xl font-bold mb-2">{tourData?.title}</h1>
-              <p className="text-gray-400 mb-4">{tourData?.description}</p>
-
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div>
-                  <strong>Location:</strong> {tourData?.location}
-                </div>
-                <div>
-                  <strong>Duration:</strong> {tourData?.startDate} to{" "}
-                  {tourData?.endDate}
-                </div>
-                <div>
-                  <strong>Tour Type:</strong> {tourData?.tourType}
-                </div>
-                <div>
-                  <strong>Max Guests:</strong> {tourData?.maxGuest}
-                </div>
-              </div>
+              <strong>Duration:</strong> {tourData.startDate} to{" "}
+              {tourData.endDate}
             </div>
-
             <div>
-              <h3 className="text-xl font-semibold mb-2">What's Included</h3>
-              <ul className="list-disc list-inside text-sm space-y-1">
-                {tourData?.included.map((item, index) => (
-                  <li key={index}>{item}</li>
-                ))}
-              </ul>
+              <strong>Tour Type:</strong> {tourData.tourType}
             </div>
-
             <div>
-              <h3 className="text-xl font-semibold mb-2">Tour Plan</h3>
-              <ol className="list-decimal list-inside text-sm space-y-1">
-                {tourData?.tourPlan.map((plan, index) => (
-                  <li key={index}>{plan}</li>
-                ))}
-              </ol>
+              <strong>Max Guests:</strong> {tourData.maxGuest}
             </div>
           </div>
+        </div>
 
-          {/* Right Section - Booking Details */}
-          <div className="w-full md:w-96">
-            <div className="p-6 shadow-sm sticky top-6">
-              <h2 className="text-2xl font-bold mb-6">Booking Details</h2>
+        <div>
+          <h3 className="text-xl font-semibold mb-2">What's Included</h3>
+          <ul className="list-disc list-inside text-sm space-y-1">
+            {tourData.included?.map((item: string, index: number) => (
+              <li key={index}>{item}</li>
+            ))}
+          </ul>
+        </div>
 
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Number of Guests
-                  </label>
-                  <div className="flex items-center space-x-3">
-                    <button
-                      onClick={decrementGuest}
-                      disabled={guestCount <= 1}
-                      className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center disabled:opacity-50"
-                    >
-                      -
-                    </button>
-                    <span className="text-lg font-medium w-8 text-center">
-                      {guestCount}
-                    </span>
-                    <button
-                      onClick={incrementGuest}
-                      disabled={guestCount >= tourData!.maxGuest}
-                      className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center disabled:opacity-50"
-                    >
-                      +
-                    </button>
-                  </div>
-                </div>
+        <div>
+          <h3 className="text-xl font-semibold mb-2">Tour Plan</h3>
+          <ol className="list-decimal list-inside text-sm space-y-1">
+            {tourData.tourPlan?.map((plan: string, index: number) => (
+              <li key={index}>{plan}</li>
+            ))}
+          </ol>
+        </div>
+      </div>
 
-                <div className="border-t pt-4">
-                  <div className="flex justify-between text-sm mb-2">
-                    <span>Price per person:</span>
-                    <span>${tourData?.costFrom}</span>
-                  </div>
-                  <div className="flex justify-between text-sm mb-2">
-                    <span>Guests:</span>
-                    <span>{guestCount}</span>
-                  </div>
-                  <div className="flex justify-between text-lg font-bold">
-                    <span>Total Amount:</span>
-                    <span>${totalAmount}</span>
-                  </div>
-                </div>
+      {/* Right Section - Booking Details */}
+      <div className="w-full md:w-96">
+        <div className="p-6 shadow-sm sticky top-6">
+          <h2 className="text-2xl font-bold mb-6">Booking Details</h2>
 
-                <Button
-                  onClick={handleBooking}
-                  className="w-full rounded-none cursor-pointer"
-                  size="lg"
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                Number of Guests
+              </label>
+              <div className="flex items-center space-x-3">
+                <button
+                  onClick={decrementGuest}
+                  disabled={guestCount <= 1}
+                  className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center disabled:opacity-50"
                 >
-                  Book Now
-                </Button>
+                  -
+                </button>
+                <span className="text-lg font-medium w-8 text-center">
+                  {guestCount}
+                </span>
+                <button
+                  onClick={incrementGuest}
+                  disabled={guestCount >= (tourData.maxGuest ?? 1)}
+                  className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center disabled:opacity-50"
+                >
+                  +
+                </button>
               </div>
             </div>
+
+            <div className="border-t pt-4">
+              <div className="flex justify-between text-sm mb-2">
+                <span>Price per person:</span>
+                <span>${tourData.costFrom}</span>
+              </div>
+              <div className="flex justify-between text-sm mb-2">
+                <span>Guests:</span>
+                <span>{guestCount}</span>
+              </div>
+              <div className="flex justify-between text-lg font-bold">
+                <span>Total Amount:</span>
+                <span>${totalAmount}</span>
+              </div>
+            </div>
+
+            <Button
+              onClick={handleBooking}
+              className="w-full rounded-none cursor-pointer"
+              size="lg"
+            >
+              Book Now
+            </Button>
           </div>
-        </>
-      )}
+        </div>
+      </div>
     </div>
   );
 };

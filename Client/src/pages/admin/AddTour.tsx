@@ -223,11 +223,15 @@ const AddTour = () => {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto px-5 mt-16">
-      <Card className="rounded-sm">
+    <div className="w-full max-w-4xl mx-auto px-5">
+      <Card className="rounded-none border-none dark:bg-[#09090B] bg-white ">
         <CardHeader>
-          <CardTitle>Add New Tour</CardTitle>
-          <CardDescription>Add a new tour to the system</CardDescription>
+          <CardTitle className="text-3xl text-center md:text-4xl font-bold text-gray-800 dark:text-white mb-3">
+            Add New Tour Package
+          </CardTitle>
+          <CardDescription className="text-gray-600 dark:text-gray-400 text-sm text-center md:text-base">
+            Add a new tour to the system
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -243,7 +247,10 @@ const AddTour = () => {
                   <FormItem>
                     <FormLabel>Tour Title</FormLabel>
                     <FormControl>
-                      <Input className="rounded-none" {...field} />
+                      <Input
+                        className="rounded-none dark:bg-[#09090B]"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -257,7 +264,10 @@ const AddTour = () => {
                     <FormItem className="flex-1">
                       <FormLabel>Location</FormLabel>
                       <FormControl>
-                        <Input className="rounded-none" {...field} />
+                        <Input
+                          className="rounded-none dark:bg-[#09090B]"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -270,7 +280,10 @@ const AddTour = () => {
                     <FormItem className="flex-1">
                       <FormLabel>Cost</FormLabel>
                       <FormControl>
-                        <Input className="rounded-none" {...field} />
+                        <Input
+                          className="rounded-none dark:bg-[#09090B]"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -285,7 +298,10 @@ const AddTour = () => {
                     <FormItem className="flex-1">
                       <FormLabel>Departure Location</FormLabel>
                       <FormControl>
-                        <Input className="rounded-none" {...field} />
+                        <Input
+                          className="rounded-none dark:bg-[#09090B]"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -298,7 +314,10 @@ const AddTour = () => {
                     <FormItem className="flex-1">
                       <FormLabel>Arrival Location</FormLabel>
                       <FormControl>
-                        <Input className="rounded-none" {...field} />
+                        <Input
+                          className="rounded-none dark:bg-[#09090B]"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -318,7 +337,7 @@ const AddTour = () => {
                         disabled={divisionLoading}
                       >
                         <FormControl>
-                          <SelectTrigger className="w-full rounded-none">
+                          <SelectTrigger className="w-full rounded-none dark:bg-[#09090B]">
                             <SelectValue />
                           </SelectTrigger>
                         </FormControl>
@@ -348,7 +367,7 @@ const AddTour = () => {
                         defaultValue={field.value}
                       >
                         <FormControl>
-                          <SelectTrigger className="w-full rounded-none">
+                          <SelectTrigger className="w-full rounded-none dark:bg-[#09090B]">
                             <SelectValue />
                           </SelectTrigger>
                         </FormControl>
@@ -378,7 +397,10 @@ const AddTour = () => {
                     <FormItem className="flex-1">
                       <FormLabel>Max Guest</FormLabel>
                       <FormControl>
-                        <Input className="rounded-none" {...field} />
+                        <Input
+                          className="rounded-none dark:bg-[#09090B]"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -391,7 +413,10 @@ const AddTour = () => {
                     <FormItem className="flex-1">
                       <FormLabel>Minimum Age</FormLabel>
                       <FormControl>
-                        <Input className="rounded-none" {...field} />
+                        <Input
+                          className="rounded-none dark:bg-[#09090B]"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -411,7 +436,7 @@ const AddTour = () => {
                             <Button
                               variant={"outline"}
                               className={cn(
-                                "w-full rounded-none pl-3 text-left font-normal",
+                                "w-full rounded-none dark:bg-[#09090B] pl-3 text-left font-normal",
                                 !field.value && "text-muted-foreground"
                               )}
                             >
@@ -455,7 +480,7 @@ const AddTour = () => {
                             <Button
                               variant={"outline"}
                               className={cn(
-                                "w-full rounded-none pl-3 text-left font-normal",
+                                "w-full rounded-none dark:bg-[#09090B] pl-3 text-left font-normal",
                                 !field.value && "text-muted-foreground"
                               )}
                             >
@@ -498,7 +523,7 @@ const AddTour = () => {
                       <FormControl>
                         <Textarea
                           {...field}
-                          className="rounded-none h-[205px]"
+                          className="rounded-none dark:bg-[#09090B] h-[205px]"
                         />
                       </FormControl>
                       <FormMessage />
@@ -514,7 +539,7 @@ const AddTour = () => {
                 <div className="flex justify-between">
                   <p className="font-semibold">Included</p>
                   <Button
-                    className="rounded-none cursor-pointer"
+                    className="rounded-none dark:bg-[#09090B] cursor-pointer"
                     type="button"
                     variant="outline"
                     size="icon"
@@ -533,7 +558,10 @@ const AddTour = () => {
                         render={({ field }) => (
                           <FormItem className="flex-1">
                             <FormControl>
-                              <Input className="rounded-none" {...field} />
+                              <Input
+                                className="rounded-none dark:bg-[#09090B]"
+                                {...field}
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -542,7 +570,7 @@ const AddTour = () => {
                       <Button
                         onClick={() => removeIncluded(index)}
                         variant="destructive"
-                        className="!bg-red-700 rounded-none cursor-pointer"
+                        className="!bg-red-700 rounded-none dark:bg-[#09090B] cursor-pointer"
                         size="icon"
                         type="button"
                       >
@@ -556,7 +584,7 @@ const AddTour = () => {
                 <div className="flex justify-between">
                   <p className="font-semibold">Excluded</p>
                   <Button
-                    className="rounded-none cursor-pointer"
+                    className="rounded-none dark:bg-[#09090B] cursor-pointer"
                     type="button"
                     variant="outline"
                     size="icon"
@@ -575,7 +603,10 @@ const AddTour = () => {
                         render={({ field }) => (
                           <FormItem className="flex-1">
                             <FormControl>
-                              <Input className="rounded-none" {...field} />
+                              <Input
+                                className="rounded-none dark:bg-[#09090B]"
+                                {...field}
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -584,7 +615,7 @@ const AddTour = () => {
                       <Button
                         onClick={() => removeExcluded(index)}
                         variant="destructive"
-                        className="!bg-red-700 rounded-none cursor-pointer"
+                        className="!bg-red-700 rounded-none dark:bg-[#09090B] cursor-pointer"
                         size="icon"
                         type="button"
                       >
@@ -599,7 +630,7 @@ const AddTour = () => {
                 <div className="flex justify-between">
                   <p className="font-semibold">Amenities</p>
                   <Button
-                    className="rounded-none cursor-pointer"
+                    className="rounded-none dark:bg-[#09090B] cursor-pointer"
                     type="button"
                     variant="outline"
                     size="icon"
@@ -618,7 +649,10 @@ const AddTour = () => {
                         render={({ field }) => (
                           <FormItem className="flex-1">
                             <FormControl>
-                              <Input className="rounded-none" {...field} />
+                              <Input
+                                className="rounded-none dark:bg-[#09090B]"
+                                {...field}
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -627,7 +661,7 @@ const AddTour = () => {
                       <Button
                         onClick={() => removeAmenities(index)}
                         variant="destructive"
-                        className="!bg-red-700 rounded-none cursor-pointer"
+                        className="!bg-red-700 rounded-none dark:bg-[#09090B] cursor-pointer"
                         size="icon"
                         type="button"
                       >
@@ -642,7 +676,7 @@ const AddTour = () => {
                 <div className="flex justify-between">
                   <p className="font-semibold">Tour Plan</p>
                   <Button
-                    className="rounded-none cursor-pointer"
+                    className="rounded-none dark:bg-[#09090B] cursor-pointer"
                     type="button"
                     variant="outline"
                     size="icon"
@@ -661,7 +695,10 @@ const AddTour = () => {
                         render={({ field }) => (
                           <FormItem className="flex-1">
                             <FormControl>
-                              <Input className="rounded-none" {...field} />
+                              <Input
+                                className="rounded-none dark:bg-[#09090B]"
+                                {...field}
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -670,7 +707,7 @@ const AddTour = () => {
                       <Button
                         onClick={() => removeTourPlan(index)}
                         variant="destructive"
-                        className="!bg-red-700 rounded-none cursor-pointer"
+                        className="!bg-red-700 rounded-none dark:bg-[#09090B] cursor-pointer"
                         size="icon"
                         type="button"
                       >

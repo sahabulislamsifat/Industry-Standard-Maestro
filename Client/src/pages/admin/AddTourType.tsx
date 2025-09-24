@@ -42,7 +42,7 @@ const AddTourType = () => {
       <div className="border border-muted rounded-[2px]">
         <Table>
           <TableHeader>
-            <TableRow>
+            <TableRow className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200">
               <TableHead className="w-[100px]">Name</TableHead>
               <TableHead className="text-right">Action</TableHead>
             </TableRow>

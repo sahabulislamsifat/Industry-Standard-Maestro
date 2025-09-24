@@ -18,22 +18,26 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useAddTourTypeMutation } from "@/redux/features/tour/tour.api";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 const AddTourTypeModel = () => {
   const form = useForm();
   const [addTourType] = useAddTourTypeMutation();
+  const [open, setOpen] = useState(false);
 
   const onSubmit = async (data: any) => {
     const res = await addTourType({ name: data.name }).unwrap();
     if (res.success) {
       toast.success("Tour Type Added");
     }
+    setOpen(false);
+    form.reset();
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <form>
         <DialogTrigger asChild>
           <Button className="rounded-[2px] cursor-pointer">
