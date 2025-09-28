@@ -18,6 +18,8 @@ import Home from "@/pages/Home";
 import Booking from "@/pages/user/Booking";
 import PaymentSuccess from "@/pages/payment/PaymentSuccess";
 import PaymentFail from "@/pages/payment/PaymentFail";
+import BookingDetails from "@/components/modules/user/BookingDetails";
+import AdminBookingDetails from "@/components/modules/admin/booking/AdminBookingDetails";
 
 export const router = createBrowserRouter([
   {
@@ -52,6 +54,10 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <Navigate to="/admin/analytics" /> },
       ...generateRoutes(adminSidebarItems),
+      {
+        path: "bookings/:id",
+        Component: withAuth(AdminBookingDetails, role.superAdmin as TRole),
+      },
     ],
   },
   {
@@ -59,7 +65,11 @@ export const router = createBrowserRouter([
     path: "/user",
     children: [
       { index: true, element: <Navigate to="/user/bookings" /> },
-      ...generateRoutes(userSidebarItems),
+      ...generateRoutes(userSidebarItems), // sidebar items
+      {
+        path: "bookings/:id",
+        Component: withAuth(BookingDetails, role.user as TRole),
+      },
     ],
   },
   {

@@ -82,7 +82,7 @@ const AddTour = () => {
   );
   // console.log(tourTypeData);
 
-  const tourTypeOptions = tourTypeData?.map(
+  const tourTypeOptions = tourTypeData?.data?.map(
     (tourType: { _id: string; name: string }) => ({
       value: tourType._id,
       label: tourType.name,

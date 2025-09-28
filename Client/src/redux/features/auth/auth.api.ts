@@ -1,23 +1,34 @@
 import { baseApi } from "@/redux/baseApi";
 import type { IResponse, ISendOtp, IVerifyOtp } from ".";
 
+// Logged-in user type (adjust fields as needed)
+interface IUser {
+  _id: string;
+  email: string;
+  name?: string;
+  role: "USER" | "ADMIN" | "SUPER_ADMIN";
+}
+
 export const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    register: builder.mutation({
+    register: builder.mutation<IResponse<IUser>, Partial<IUser>>({
       query: (userInfo) => ({
         url: "/user/register",
         method: "POST",
         data: userInfo,
       }),
     }),
-    login: builder.mutation({
+    login: builder.mutation<
+      IResponse<IUser>,
+      { email: string; password: string }
+    >({
       query: (userInfo) => ({
         url: "/auth/login",
         method: "POST",
         data: userInfo,
       }),
     }),
-    logout: builder.mutation({
+    logout: builder.mutation<void, void>({
       query: () => ({
         url: "/auth/logout",
         method: "POST",
@@ -38,7 +49,8 @@ export const authApi = baseApi.injectEndpoints({
         data: userInfo,
       }),
     }),
-    userInfo: builder.query({
+    // userInfo query with void type
+    userInfo: builder.query<IResponse<IUser>, void>({
       query: () => ({
         url: "/user/me",
         method: "GET",
@@ -54,5 +66,5 @@ export const {
   useLogoutMutation,
   useSendOtpMutation,
   useVerifyOtpMutation,
-  useUserInfoQuery,
+  useUserInfoQuery, // now works without argument
 } = authApi;

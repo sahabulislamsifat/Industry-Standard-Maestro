@@ -105,23 +105,73 @@ const createBooking = async (payload: Partial<IBooking>, userId: string) => {
 
 // Frontend(localhost:5173) - User - Tour - Booking (Pending) - Payment(Unpaid) -> SSLCommerz Page -> Payment Fail / Cancel -> Backend(localhost:5000) -> Update Payment(FAIL / CANCEL) & Booking(FAIL / CANCEL) -> redirect to frontend -> Frontend(localhost:5173/payment/cancel or localhost:5173/payment/fail)
 
-const getUserBookings = async () => {
-  return {};
+//  Get user-specific bookings bu userId
+const getUserBookings = async (userId: string) => {
+  return await Booking.find({ user: userId })
+    .populate("tour", "title costFrom")
+    .populate("payment", "status amount transactionId")
+    .sort({ createdAt: -1 });
 };
-const getBookingById = async () => {
-  return {};
+
+// Get booking by Id
+const getBookingById = async (bookingId: string, userId: string) => {
+  const booking = await Booking.findOne({ _id: bookingId, user: userId })
+    .populate("tour")
+    .populate("payment")
+    .populate("user", "name email phone");
+  if (!booking) {
+    throw new AppError(httpStatus.NOT_FOUND, "Booking not found!");
+  }
+  return booking;
 };
-const updateBookingStatus = async () => {
-  return {};
+
+// booking for admin (without user filter)
+const getBookingByIdForAdmin = async (bookingId: string) => {
+  const booking = await Booking.findById(bookingId)
+    .populate("tour")
+    .populate("payment")
+    .populate("user", "name email phone");
+
+  if (!booking) {
+    throw new AppError(httpStatus.NOT_FOUND, "Booking not found!");
+  }
+  return booking;
 };
+
+// Update booking status (Admin / Super Admin can update)
+const updateBookingStatus = async (
+  bookingId: string,
+  status: BOOKING_STATUS
+) => {
+  const booking = await Booking.findByIdAndUpdate(
+    bookingId,
+    { status },
+    { new: true, runValidators: true }
+  )
+    .populate("tour")
+    .populate("payment")
+    .populate("user", "name email phone");
+
+  if (!booking) {
+    throw new AppError(httpStatus.NOT_FOUND, "Booking not found!");
+  }
+  return booking;
+};
+
+//  Get all bookings (Admin only)
 const getAllBookings = async () => {
-  return {};
+  return await Booking.find()
+    .populate("user", "name email phone")
+    .populate("tour", "title costFrom")
+    .populate("payment")
+    .sort({ createdAt: -1 });
 };
 
 export const bookingService = {
   createBooking,
   getUserBookings,
   getBookingById,
+  getBookingByIdForAdmin,
   updateBookingStatus,
   getAllBookings,
 };
