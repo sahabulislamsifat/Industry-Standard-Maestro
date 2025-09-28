@@ -26,6 +26,22 @@ import { useEffect } from "react";
 const barColors = ["#4f46e5", "#6366f1", "#818cf8", "#a5b4fc"];
 const pieColors = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444"];
 
+// Months array
+const months = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
 interface RevenueItem {
   month: string;
   revenue: number;
@@ -50,155 +66,117 @@ const Analytics = () => {
   const { data: revenueDataRaw, isLoading: revenueLoading } =
     useGetPaymentStatsQuery();
 
-  // Debugging: useEffect for updated data
-  // useEffect(() => {
-  //   if (usersData) console.log("Users data updated:", usersData.totalUsers);
-  //   if (toursData) console.log("Tours data updated:", toursData);
-  //   if (bookingsDataRaw) console.log("Bookings data updated:", bookingsDataRaw);
-  //   if (revenueDataRaw) console.log("Revenue data updated:", revenueDataRaw);
-  // }, [usersData, toursData, bookingsDataRaw, revenueDataRaw]);
-
   const isAnyLoading =
     usersLoading || toursLoading || bookingsLoading || revenueLoading;
 
   if (isAnyLoading)
-    return <p className="text-center mt-10">Loading analytics data...</p>;
+    return (
+      <p className="text-center mt-10 text-gray-500">
+        Loading analytics data...
+      </p>
+    );
 
-  // Safe fallback for bookings
-  const bookingsData: BookingItem[] =
-    Array.isArray(bookingsDataRaw) && bookingsDataRaw.length > 0
-      ? bookingsDataRaw
-      : [
-          { month: "Jan", bookings: 0 },
-          { month: "Feb", bookings: 0 },
-          { month: "Mar", bookings: 0 },
-          { month: "Apr", bookings: 0 },
-          { month: "May", bookings: 0 },
-          { month: "Jun", bookings: 0 },
-          { month: "Jly", bookings: 0 },
-          { month: "Aug", bookings: 0 },
-          { month: "Sep", bookings: 0 },
-          { month: "Oct", bookings: 0 },
-          { month: "Nov", bookings: 0 },
-          { month: "Dec", bookings: 0 },
-        ];
-
-  // Safe fallback for revenue
-  const revenueArray: RevenueItem[] =
-    Array.isArray(revenueDataRaw) && revenueDataRaw.length > 0
-      ? revenueDataRaw
-      : [
-          { month: "Jan", revenue: 0 },
-          { month: "Feb", revenue: 0 },
-          { month: "Mar", revenue: 0 },
-          { month: "Apr", revenue: 0 },
-          { month: "May", revenue: 0 },
-          { month: "Jun", revenue: 0 },
-          { month: "Jly", revenue: 0 },
-          { month: "Aug", revenue: 0 },
-          { month: "Sep", revenue: 0 },
-          { month: "Oct", revenue: 0 },
-          { month: "Nov", revenue: 0 },
-          { month: "Dec", revenue: 0 },
-        ];
-
-  // Safe fallback for tour types
-  const toursTypes: TourType[] =
-    toursData?.types && toursData.types.length > 0
-      ? toursData.types
-      : [
-          { name: "Adventure", value: 0 },
-          { name: "City", value: 0 },
-          { name: "Beach", value: 0 },
-        ];
-
-  // Totals calculation
-  const totalRevenue = revenueArray.reduce(
-    (sum, r) => sum + (r.revenue || 0),
-    0
-  );
-  const totalBookings = bookingsData.reduce(
-    (sum, b) => sum + (b.bookings || 0),
-    0
-  );
+  // Totals
   const totalUsers = usersData?.totalUsers ?? 0;
-  const totalTours = toursData?.totalTours ?? 0;
+  const totalTours = toursData?.totalTour ?? 0;
+  const totalBookings = bookingsDataRaw?.totalBooking ?? 0;
+  const totalRevenue = revenueDataRaw?.totalRevenue ?? 0;
 
-  // Dark/light mode for charts
+  // Month-wise bookings chart
+  const bookingsData: BookingItem[] = (
+    bookingsDataRaw?.bookingsData || Array(12).fill({ count: 0 })
+  ).map((b: any, i: number) => ({
+    month: months[i] ?? `Month ${i + 1}`,
+    bookings: b.count ?? 0,
+  }));
+
+  // Month-wise revenue chart
+  const revenueArray: RevenueItem[] = revenueDataRaw?.revenueData?.map(
+    (r: any, i: number) => ({
+      month: months[i] ?? `Month ${i + 1}`,
+      revenue: r.total ?? 0,
+    })
+  ) ?? [{ month: "Total", revenue: totalRevenue }];
+
+  // Tours by type
+  const toursTypes: TourType[] = Array.isArray(toursData?.totalTourByTourType)
+    ? toursData.totalTourByTourType.map((t: any) => ({
+        name: t._id ?? "Unknown",
+        value: t.count ?? 0,
+      }))
+    : [
+        { name: "Adventure", value: 0 },
+        { name: "City", value: 0 },
+        { name: "Beach", value: 0 },
+      ];
+
+  // Dark/light mode
   const isDark = document.documentElement.classList.contains("dark");
   const axisColor = isDark ? "#9ca3af" : "#374151";
   const tooltipBg = isDark ? "#1f2937" : "#f9fafb";
   const tooltipColor = isDark ? "#f9fafb" : "#111827";
-  const cardBg = isDark ? "#09090B" : "bg-white";
-  const cardBorder = isDark ? "border-gray-700" : "border-gray-100";
-  const textPrimary = isDark ? "text-gray-100" : "text-gray-800";
+  const cardBg = isDark ? "bg-[#111]" : "bg-white";
+  const cardBorder = isDark ? "border-gray-700" : "border-gray-200";
+  const textPrimary = isDark ? "text-gray-100" : "text-gray-900";
   const textSecondary = isDark ? "text-gray-400" : "text-gray-500";
 
   return (
-    <div className="px-6 space-y-8">
+    <div className="px-6 py-8 space-y-8">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
         <h1 className={`text-3xl font-bold ${textPrimary}`}>Admin Analytics</h1>
-        <p className={`${textSecondary}`}>
-          Overview of tours, bookings, and revenue
+        <p className={`text-sm ${textSecondary}`}>
+          Overview of users, tours, bookings, and revenue
         </p>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {/* Total Users */}
-        <div className={`p-6 ${cardBg} ${cardBorder} flex items-center gap-4`}>
-          <div className="p-3 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300">
-            <Users size={28} />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {[
+          {
+            icon: <Users size={28} />,
+            bg: "bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300",
+            title: "Total Users",
+            value: totalUsers,
+          },
+          {
+            icon: <MapPin size={28} />,
+            bg: "bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-300",
+            title: "Total Tours",
+            value: totalTours,
+          },
+          {
+            icon: <BarChart3 size={28} />,
+            bg: "bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-300",
+            title: "Total Bookings",
+            value: totalBookings,
+          },
+          {
+            icon: <DollarSign size={28} />,
+            bg: "bg-yellow-100 dark:bg-yellow-900 text-yellow-600 dark:text-yellow-300",
+            title: "Revenue",
+            value: `$${totalRevenue.toLocaleString()}`,
+          },
+        ].map((card, idx) => (
+          <div
+            key={idx}
+            className={`p-6 ${cardBg} border ${cardBorder} flex items-center gap-4 rounded shadow`}
+          >
+            <div className={`p-3 rounded-full ${card.bg}`}>{card.icon}</div>
+            <div>
+              <h3 className={`text-sm ${textSecondary}`}>{card.title}</h3>
+              <p className={`text-2xl font-bold ${textPrimary}`}>
+                {card.value}
+              </p>
+            </div>
           </div>
-          <div>
-            <h3 className={`text-sm ${textSecondary}`}>Total Users</h3>
-            <p className={`text-2xl font-bold ${textPrimary}`}>{totalUsers}</p>
-          </div>
-        </div>
-
-        {/* Total Tours */}
-        <div className={`p-6 ${cardBg} ${cardBorder} flex items-center gap-4`}>
-          <div className="p-3 rounded-full bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-300">
-            <MapPin size={28} />
-          </div>
-          <div>
-            <h3 className={`text-sm ${textSecondary}`}>Total Tours</h3>
-            <p className={`text-2xl font-bold ${textPrimary}`}>{totalTours}</p>
-          </div>
-        </div>
-
-        {/* Total Bookings */}
-        <div className={`p-6 ${cardBg} ${cardBorder} flex items-center gap-4`}>
-          <div className="p-3 rounded-full bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-300">
-            <BarChart3 size={28} />
-          </div>
-          <div>
-            <h3 className={`text-sm ${textSecondary}`}>Total Bookings</h3>
-            <p className={`text-2xl font-bold ${textPrimary}`}>
-              {totalBookings}
-            </p>
-          </div>
-        </div>
-
-        {/* Revenue */}
-        <div className={`p-6 ${cardBg} ${cardBorder} flex items-center gap-4`}>
-          <div className="p-3 rounded-full bg-yellow-100 dark:bg-yellow-900 text-yellow-600 dark:text-yellow-300">
-            <DollarSign size={28} />
-          </div>
-          <div>
-            <h3 className={`text-sm ${textSecondary}`}>Revenue</h3>
-            <p className={`text-2xl font-bold ${textPrimary}`}>
-              ${totalRevenue.toLocaleString()}
-            </p>
-          </div>
-        </div>
+        ))}
       </div>
 
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Bookings Line Chart */}
-        <div className={`p-6 ${cardBg} ${cardBorder}`}>
+        <div className={`p-6 ${cardBg} border ${cardBorder} rounded shadow`}>
           <h2 className={`text-xl font-semibold mb-4 ${textPrimary}`}>
             Bookings Trend
           </h2>
@@ -218,7 +196,7 @@ const Analytics = () => {
                   contentStyle={{
                     backgroundColor: tooltipBg,
                     color: tooltipColor,
-                    borderRadius: 2,
+                    borderRadius: 4,
                   }}
                 />
                 <Line
@@ -226,8 +204,8 @@ const Analytics = () => {
                   dataKey="bookings"
                   stroke="#6366f1"
                   strokeWidth={3}
-                  dot={{ r: 5 }}
-                  activeDot={{ r: 7 }}
+                  dot={{ r: 4 }}
+                  activeDot={{ r: 6 }}
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -235,7 +213,7 @@ const Analytics = () => {
         </div>
 
         {/* Tours Pie Chart */}
-        <div className={`p-6 ${cardBg} ${cardBorder}`}>
+        <div className={`p-6 ${cardBg} border ${cardBorder} rounded shadow`}>
           <h2 className={`text-xl font-semibold mb-4 ${textPrimary}`}>
             Tours Distribution
           </h2>
@@ -251,20 +229,17 @@ const Analytics = () => {
                   paddingAngle={4}
                   label={{ fill: axisColor }}
                 >
-                  {toursTypes.map((entry: TourType, index: number) => (
-                    <Cell
-                      key={index}
-                      fill={pieColors[index % pieColors.length]}
-                    />
+                  {toursTypes.map((entry, idx) => (
+                    <Cell key={idx} fill={pieColors[idx % pieColors.length]} />
                   ))}
                 </Pie>
                 <Tooltip
                   contentStyle={{
                     backgroundColor: tooltipBg,
                     color: tooltipColor,
-                    borderRadius: 2,
+                    borderRadius: 4,
                   }}
-                  formatter={(value: number) => value}
+                  formatter={(val) => val}
                 />
                 <Legend
                   verticalAlign="bottom"
@@ -277,7 +252,7 @@ const Analytics = () => {
       </div>
 
       {/* Revenue Bar Chart */}
-      <div className={`p-6 ${cardBg} ${cardBorder}`}>
+      <div className={`p-6 ${cardBg} border ${cardBorder} rounded shadow`}>
         <h2 className={`text-xl font-semibold mb-4 ${textPrimary}`}>
           Revenue Growth
         </h2>
@@ -295,22 +270,19 @@ const Analytics = () => {
               <XAxis dataKey="month" stroke={axisColor} />
               <YAxis
                 stroke={axisColor}
-                tickFormatter={(value) => `$${value / 1000}k`}
+                tickFormatter={(v) => `$${v / 1000}k`}
               />
               <Tooltip
                 contentStyle={{
                   backgroundColor: tooltipBg,
                   color: tooltipColor,
-                  borderRadius: 2,
+                  borderRadius: 4,
                 }}
-                formatter={(value: number) => `$${value.toLocaleString()}`}
+                formatter={(v: number) => `$${v.toLocaleString()}`}
               />
               <Bar dataKey="revenue" radius={[8, 8, 0, 0]} barSize={30}>
-                {revenueArray.map((entry: RevenueItem, index: number) => (
-                  <Cell
-                    key={index}
-                    fill={barColors[index % barColors.length]}
-                  />
+                {revenueArray.map((entry, idx) => (
+                  <Cell key={idx} fill={barColors[idx % barColors.length]} />
                 ))}
               </Bar>
             </BarChart>

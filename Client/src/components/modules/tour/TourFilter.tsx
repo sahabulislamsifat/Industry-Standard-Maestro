@@ -32,7 +32,7 @@ const TourFilter = () => {
     })
   );
 
-  const tourTypeOptions = tourTypeData?.map(
+  const tourTypeOptions = tourTypeData?.data?.map(
     (item: { _id: string; name: string }) => ({
       label: item.name,
       value: item._id,

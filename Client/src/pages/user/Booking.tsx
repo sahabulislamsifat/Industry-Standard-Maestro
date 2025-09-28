@@ -12,7 +12,7 @@ const Booking = () => {
   const { data, isLoading, isError } = useGetAllToursQuery({ _id: id });
   const [createBooking] = useCreateBookingMutation();
 
-  const tourData = data?.[0]; // 👈 safe optional chaining
+  const tourData = data?.[0]; // safe optional chaining
 
   useEffect(() => {
     if (!isLoading && !isError && tourData) {
@@ -29,7 +29,7 @@ const Booking = () => {
   };
 
   const handleBooking = async () => {
-    if (!tourData) return; // 👈 safe guard
+    if (!tourData) return; // safe guard
 
     const bookingData = {
       tour: id,
@@ -202,60 +202,5 @@ const Booking = () => {
     </div>
   );
 };
-
-//  const tourData: ITourPackage = {
-//    _id: "1",
-//    title: "Magical Santorini Island Adventure",
-//    description:
-//      "Experience the breathtaking beauty of Santorini with its iconic white-washed buildings, stunning sunsets, and crystal-clear waters. This 5-day adventure includes visits to traditional villages, wine tasting, and relaxation on unique volcanic beaches.",
-//    location: "Santorini, Greece",
-//    images: [
-//      "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=500&h=300&fit=crop",
-//      "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?w=500&h=300&fit=crop",
-//      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500&h=300&fit=crop",
-//    ],
-//    costFrom: 1299,
-//    maxGuest: 12,
-//    startDate: "2024-06-15",
-//    endDate: "2024-06-20",
-//    departureLocation: "Athens International Airport",
-//    arrivalLocation: "Santorini Airport",
-//    division: "Cyclades",
-//    tourType: "Cultural & Leisure",
-//    minAge: 18,
-//    amenities: [
-//      "Free WiFi",
-//      "Air Conditioning",
-//      "Swimming Pool Access",
-//      "24/7 Concierge",
-//      "Spa Services",
-//    ],
-//    included: [
-//      "Round-trip flights",
-//      "4-star hotel accommodation",
-//      "Daily breakfast",
-//      "Guided tours",
-//      "Wine tasting experience",
-//      "Sunset cruise",
-//    ],
-//    excluded: [
-//      "Travel insurance",
-//      "Lunch and dinner",
-//      "Personal expenses",
-//      "Optional activities",
-//      "Tips and gratuities",
-//    ],
-//    tourPlan: [
-//      "Arrival in Santorini and check-in to hotel",
-//      "Explore Fira town and enjoy welcome dinner",
-//      "Visit Oia village and watch famous sunset",
-//      "Wine tasting tour in traditional vineyards",
-//      "Relax at Red Beach and visit Akrotiri ruins",
-//      "Sunset sailing cruise and departure",
-//    ],
-//    slug: "magical-santorini-island-adventure",
-//    createdAt: "2024-01-15T10:30:00.000Z",
-//    updatedAt: "2024-02-10T14:45:00.000Z",
-//  };
 
 export default Booking;

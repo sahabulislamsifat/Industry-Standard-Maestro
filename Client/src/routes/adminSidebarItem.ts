@@ -1,3 +1,4 @@
+import AllBookingsTable from "@/components/modules/admin/booking/AllBookingsTable";
 import addDivision from "@/pages/admin/addDivision";
 import AddTour from "@/pages/admin/AddTour";
 import AddTourType from "@/pages/admin/AddTourType";
@@ -20,6 +21,11 @@ export const adminSidebarItems: ISidebarItem[] = [
   {
     title: "Tour Management",
     items: [
+      {
+        title: "All Bookings (Manage)",
+        url: "/admin/all-bookings",
+        component: AllBookingsTable,
+      },
       {
         title: "Add Division",
         url: "/admin/add-division",
