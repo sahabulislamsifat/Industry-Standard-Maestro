@@ -227,7 +227,7 @@ const Analytics = () => {
                   paddingAngle={4}
                   label={{ fill: axisColor }}
                 >
-                  {toursTypes.map((entry, idx) => (
+                  {toursTypes.map((_, idx) => (
                     <Cell key={idx} fill={pieColors[idx % pieColors.length]} />
                   ))}
                 </Pie>
@@ -279,7 +279,7 @@ const Analytics = () => {
                 formatter={(v: number) => `$${v.toLocaleString()}`}
               />
               <Bar dataKey="revenue" radius={[8, 8, 0, 0]} barSize={30}>
-                {revenueArray.map((entry, idx) => (
+                {revenueArray.map((_, idx) => (
                   <Cell key={idx} fill={barColors[idx % barColors.length]} />
                 ))}
               </Bar>
