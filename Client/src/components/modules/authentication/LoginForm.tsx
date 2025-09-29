@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import Password from "@/components/ui/password";
 import { cn } from "@/lib/utils";
 import { useLoginMutation } from "@/redux/features/auth/auth.api";
-import { useForm, type FieldValues, type SubmitHandler } from "react-hook-form";
+import { useForm, type SubmitHandler } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
 import { toast } from "sonner";
 
@@ -21,7 +21,12 @@ const LoginForm = ({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => {
   const navigate = useNavigate();
-  const form = useForm({
+  type LoginFormValues = {
+    email: string;
+    password: string;
+  };
+
+  const form = useForm<LoginFormValues>({
     //! For development only
     defaultValues: {
       email: "sifat.testemail@gmail.com",
@@ -29,7 +34,7 @@ const LoginForm = ({
     },
   });
   const [login] = useLoginMutation();
-  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+  const onSubmit: SubmitHandler<LoginFormValues> = async (data) => {
     try {
       const res = await login(data).unwrap();
 

@@ -20,8 +20,6 @@ import {
   useGetTourStatsQuery,
   useGetUserStatsQuery,
 } from "@/redux/features/stats/stats.api";
-import { useEffect } from "react";
-
 // Colors
 const barColors = ["#4f46e5", "#6366f1", "#818cf8", "#a5b4fc"];
 const pieColors = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444"];
