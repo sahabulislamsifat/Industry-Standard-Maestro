@@ -18,7 +18,7 @@ app.use(
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: false, // HTTPS only
+      secure: true, // HTTPS only
       sameSite: "none", // allow cross-site
     },
   })
