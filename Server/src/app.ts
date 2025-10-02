@@ -26,7 +26,10 @@ app.set("trust proxy", 1);
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: ["http://localhost:5173", "tour-management-system-2025.vercel.app"],
+    origin: [
+      "http://localhost:5173",
+      "https://tour-management-system-server-2025.vercel.app",
+    ],
     credentials: true,
   })
 );
