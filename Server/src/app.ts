@@ -5,25 +5,25 @@ import { globalErrorHandler } from "./app/middlewares/globalErrorHandler";
 import notFound from "./app/middlewares/notFound";
 import cookieParser from "cookie-parser";
 import passport from "passport";
-import expressSession from "express-session";
+// import expressSession from "express-session";
 import "./app/config/passport";
-import { envVariables } from "./app/config/env";
+// import { envVariables } from "./app/config/env";
 
 const app = express();
 
-app.use(
-  expressSession({
-    secret: envVariables.EXPRESS_SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      httpOnly: true,
-      secure: true, // HTTPS only
-      sameSite: "none", // allow cross-site
-      maxAge: 1000 * 60 * 60 * 24 * 30, // 30 days
-    },
-  })
-);
+// app.use(
+//   expressSession({
+//     secret: envVariables.EXPRESS_SESSION_SECRET,
+//     resave: false,
+//     saveUninitialized: false,
+//     cookie: {
+//       httpOnly: true,
+//       secure: true, // HTTPS only
+//       sameSite: "none", // allow cross-site
+//       maxAge: 1000 * 60 * 60 * 24 * 30, // 30 days
+//     },
+//   })
+// );
 
 app.use(passport.initialize());
 app.use(passport.session());
