@@ -16,8 +16,15 @@ app.use(
     secret: envVariables.EXPRESS_SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      secure: true, // HTTPS only
+      sameSite: "none", // allow cross-site
+      maxAge: 1000 * 60 * 60 * 24 * 30, // 30 days
+    },
   })
 );
+
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(cookieParser());
@@ -27,7 +34,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
     origin: [
-      // "http://localhost:5173",
+      "http://localhost:5173",
       "https://tour-management-system-2025.vercel.app",
     ],
     credentials: true,
