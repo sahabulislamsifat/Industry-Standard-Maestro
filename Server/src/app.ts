@@ -35,7 +35,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://tour-management-system-2025.vercel.app",
+      "https://tour-management-system-2025.netlify.app",
     ],
     credentials: true,
   })
