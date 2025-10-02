@@ -13,6 +13,8 @@ export const setAuthCookie = (res: Response, tokenInfo: AuthToken) => {
       // secure: envVariables.NODE_ENV === "production",
       secure: true,
       sameSite: "none",
+      path: "/", // important
+      maxAge: 1000 * 60 * 15,
     });
   }
   if (tokenInfo.refreshToken) {
@@ -21,6 +23,8 @@ export const setAuthCookie = (res: Response, tokenInfo: AuthToken) => {
       // secure: envVariables.NODE_ENV === "production",
       secure: true,
       sameSite: "none",
+      path: "/", // important
+      maxAge: 1000 * 60 * 60 * 24 * 30,
     });
   }
 };
