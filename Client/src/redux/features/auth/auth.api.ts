@@ -32,7 +32,6 @@ export const authApi = baseApi.injectEndpoints({
       query: () => ({
         url: "/auth/logout",
         method: "POST",
-        credentials: "include", // 👈 important
       }),
       invalidatesTags: ["USER"],
     }),
