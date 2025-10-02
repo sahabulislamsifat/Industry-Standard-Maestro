@@ -11,29 +11,47 @@ import { envVariables } from "./app/config/env";
 
 const app = express();
 
+// Trust proxy for Vercel deployment
+app.set("trust proxy", 1);
+
+// Middleware
+app.use(cookieParser());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// CORS for frontend domains
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://tour-management-system-2025.vercel.app",
+];
+
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true,
+  })
+);
+
+// Express session
 app.use(
   expressSession({
     secret: envVariables.EXPRESS_SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-  })
-);
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(cookieParser());
-app.use(express.json());
-app.set("trust proxy", 1);
-app.use(express.urlencoded({ extended: true }));
-app.use(
-  cors({
-    origin: [
-      "http://localhost:5173",
-      "https://tour-management-system-server-2025.vercel.app",
-    ],
-    credentials: true,
+    cookie: {
+      secure: envVariables.NODE_ENV === "production", // secure cookies in prod
+      sameSite: "none", // allow cross-site cookies
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 24 * 30, // 30 days
+    },
   })
 );
 
+// Passport
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Routes
 app.use("/api/v1", router);
 
 app.get("/", (req: Request, res: Response) => {
@@ -43,6 +61,7 @@ app.get("/", (req: Request, res: Response) => {
   });
 });
 
+// Error handling
 app.use(globalErrorHandler);
 app.use(notFound);
 
