@@ -5,24 +5,28 @@ import { globalErrorHandler } from "./app/middlewares/globalErrorHandler";
 import notFound from "./app/middlewares/notFound";
 import cookieParser from "cookie-parser";
 import passport from "passport";
+import expressSession from "express-session";
 import "./app/config/passport";
+import { envVariables } from "./app/config/env";
 
 const app = express();
 
-// ❌ Remove express-session (no connect.sid anymore)
+app.use(
+  expressSession({
+    secret: envVariables.EXPRESS_SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+  })
+);
 app.use(passport.initialize());
+app.use(passport.session());
 app.use(cookieParser());
 app.use(express.json());
 app.set("trust proxy", 1);
 app.use(express.urlencoded({ extended: true }));
-
-// ✅ Allow frontend domains
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://tour-management-system-2025.netlify.app",
-    ],
+    origin: envVariables.FRONTEND_URL,
     credentials: true,
   })
 );
