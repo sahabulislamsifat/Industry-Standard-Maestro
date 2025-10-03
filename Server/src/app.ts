@@ -5,31 +5,18 @@ import { globalErrorHandler } from "./app/middlewares/globalErrorHandler";
 import notFound from "./app/middlewares/notFound";
 import cookieParser from "cookie-parser";
 import passport from "passport";
-import expressSession from "express-session";
 import "./app/config/passport";
-import { envVariables } from "./app/config/env";
 
 const app = express();
 
-app.use(
-  expressSession({
-    secret: envVariables.EXPRESS_SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      httpOnly: true,
-      secure: true, // HTTPS only
-      sameSite: "none", // allow cross-site
-    },
-  })
-);
-
+// ❌ Remove express-session (no connect.sid anymore)
 app.use(passport.initialize());
-app.use(passport.session());
 app.use(cookieParser());
 app.use(express.json());
 app.set("trust proxy", 1);
 app.use(express.urlencoded({ extended: true }));
+
+// ✅ Allow frontend domains
 app.use(
   cors({
     origin: [

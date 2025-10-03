@@ -12,21 +12,107 @@ import { envVariables } from "../../config/env";
 import { JwtPayload } from "jsonwebtoken";
 import passport from "passport";
 
+// const credentialsLogin = catchAsync(
+//   async (req: Request, res: Response, next: NextFunction) => {
+//     // const loginInfo = await authService.credentialsLogin(req.body);
+//     passport.authenticate("local", async (err: any, user: any, info: any) => {
+//       if (err) {
+//         // return new AppError(401, err); xxx
+//         return next(new AppError(401, err));
+//       }
+//       if (!user) {
+//         // return new AppError(401, info.message);
+//         return next(new AppError(401, info.message));
+//       }
+
+//       const userTokens = await createUserTokens(user);
+
+//       const { password: pass, ...rest } = user.toObject();
+
+//       setAuthCookie(res, userTokens);
+
+//       sendResponse(res, {
+//         success: true,
+//         statusCode: httpStatus.OK,
+//         message: "User Login Successfully",
+//         data: {
+//           accessToken: userTokens.accessToken,
+//           refreshToken: userTokens.refreshToken,
+//           user: rest,
+//         },
+//       });
+//     })(req, res, next);
+
+//     // res.cookie("accessToken", loginInfo.refreshToken, {
+//     //   httpOnly: true,
+//     //   secure: false,
+//     // });
+
+//     // res.cookie("refreshToken", loginInfo.refreshToken, {
+//     //   httpOnly: true,
+//     //   secure: false,
+//     // });
+//   }
+// );
+
+// const getNewAccessToken = catchAsync(
+//   async (req: Request, res: Response, next: NextFunction) => {
+//     const refreshToken = req.cookies.refreshToken;
+
+//     if (!refreshToken) {
+//       throw new AppError(
+//         httpStatus.BAD_REQUEST,
+//         "No refresh token received from cookies..."
+//       );
+//     }
+
+//     const tokenInfo = await authService.getNewAccessToken(
+//       refreshToken as string
+//     );
+
+//     setAuthCookie(res, refreshToken);
+
+//     sendResponse(res, {
+//       success: true,
+//       statusCode: httpStatus.OK,
+//       message: "New access token retrieved Successfully",
+//       data: tokenInfo,
+//     });
+//   }
+// );
+
+// const logout = catchAsync(
+//   async (req: Request, res: Response, next: NextFunction) => {
+//     res.clearCookie("accessToken", {
+//       httpOnly: true,
+//       secure: false,
+//       sameSite: "lax",
+//       path: "/",
+//     });
+//     res.clearCookie("refreshToken", {
+//       httpOnly: true,
+//       secure: false,
+//       sameSite: "lax",
+//       path: "/",
+//     });
+
+//     sendResponse(res, {
+//       success: true,
+//       statusCode: httpStatus.OK,
+//       message: "User Logout Successfully",
+//       data: null,
+//     });
+//   }
+// );
+
+// ✅ Login
 const credentialsLogin = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    // const loginInfo = await authService.credentialsLogin(req.body);
     passport.authenticate("local", async (err: any, user: any, info: any) => {
-      if (err) {
-        // return new AppError(401, err); xxx
-        return next(new AppError(401, err));
-      }
-      if (!user) {
-        // return new AppError(401, info.message);
-        return next(new AppError(401, info.message));
-      }
+      if (err) return next(new AppError(401, err));
+      if (!user) return next(new AppError(401, info.message));
 
       const userTokens = await createUserTokens(user);
-
       const { password: pass, ...rest } = user.toObject();
 
       setAuthCookie(res, userTokens);
@@ -42,68 +128,53 @@ const credentialsLogin = catchAsync(
         },
       });
     })(req, res, next);
-
-    // res.cookie("accessToken", loginInfo.refreshToken, {
-    //   httpOnly: true,
-    //   secure: false,
-    // });
-
-    // res.cookie("refreshToken", loginInfo.refreshToken, {
-    //   httpOnly: true,
-    //   secure: false,
-    // });
   }
 );
 
-const getNewAccessToken = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const refreshToken = req.cookies.refreshToken;
-
-    if (!refreshToken) {
-      throw new AppError(
-        httpStatus.BAD_REQUEST,
-        "No refresh token received from cookies..."
-      );
-    }
-
-    const tokenInfo = await authService.getNewAccessToken(
-      refreshToken as string
+// ✅ Refresh Token
+const getNewAccessToken = catchAsync(async (req: Request, res: Response) => {
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "No refresh token received from cookies..."
     );
-
-    setAuthCookie(res, refreshToken);
-
-    sendResponse(res, {
-      success: true,
-      statusCode: httpStatus.OK,
-      message: "New access token retrieved Successfully",
-      data: tokenInfo,
-    });
   }
-);
 
-const logout = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    res.clearCookie("accessToken", {
-      httpOnly: true,
-      secure: false,
-      sameSite: "lax",
-      path: "/",
-    });
-    res.clearCookie("refreshToken", {
-      httpOnly: true,
-      secure: false,
-      sameSite: "lax",
-      path: "/",
-    });
+  const tokenInfo = await authService.getNewAccessToken(refreshToken as string);
+  setAuthCookie(res, tokenInfo);
 
-    sendResponse(res, {
-      success: true,
-      statusCode: httpStatus.OK,
-      message: "User Logout Successfully",
-      data: null,
-    });
-  }
-);
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "New access token retrieved Successfully",
+    data: tokenInfo,
+  });
+});
+
+// ✅ Logout (must match cookie attributes)
+const logout = catchAsync(async (req: Request, res: Response) => {
+  res.clearCookie("accessToken", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+    path: "/",
+  });
+
+  res.clearCookie("refreshToken", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+    path: "/",
+  });
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "User Logout Successfully",
+    data: null,
+  });
+});
 
 const changePassword = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
