@@ -142,7 +142,7 @@ const getNewAccessToken = catchAsync(async (req: Request, res: Response) => {
   }
 
   const tokenInfo = await authService.getNewAccessToken(refreshToken as string);
-  setAuthCookie(res, tokenInfo);
+  setAuthCookie(res, tokenInfo as any);
 
   sendResponse(res, {
     success: true,
